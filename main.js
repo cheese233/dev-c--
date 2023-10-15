@@ -10,7 +10,7 @@ globalThis.clangd = new clangd_wasm.ClangdStdioTransport({
   baseURL: clangCoreUrl,
   debug: true,
 });
-await clangd.connect();
+
 ace.config.setModuleLoader("theme/dev-cpp", () => import("./theme/dev-cpp"));
 var editor = ace.edit("editor", {
   mode: new CppMode(),

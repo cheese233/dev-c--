@@ -4,6 +4,7 @@ import { Transport } from "@open-rpc/client-js/build/transports/Transport";
 import * as createClangdModule from "@clangd-wasm/core/dist/clangd";
 import clangdUrl from "@clangd-wasm/core/dist/clangd?url";
 import clangdWorkerUrl from "@clangd-wasm/core/dist/clangd.worker?url";
+import clangWasm from "@clangd-wasm/core/dist/clangd.wasm?url";
 // Adapted from https://github.com/ffmpegwasm/ffmpeg.wasm/blob/master/src/browser/getCreateFFmpegCore.js
 /** @param {string} url
  * @param {string} mimeType
@@ -134,6 +135,9 @@ class ClangdModule {
     } else if (path.endsWith(".js")) {
       return this.mainJSObjectURL;
     }
+    if (path.endsWith(".wasm")) {
+      return clangWasm;
+    }
 
     return this.options.baseURL + "/" + path;
   }
@@ -166,20 +170,18 @@ class ClangdStdioTransport extends Transport {
   module = undefined;
 
   options = undefined;
-
   // static getDefaultBaseURL(useSmallBinary: boolean)
   // {
   //     const packageID = useSmallBinary ? "@clangd-wasm/core-small" : "@clangd-wasm/core"
   //     return `https://unpkg.com/@clangd-wasm/core@${packageInfo.devDependencies[packageID].substring(1)}/dist`
   // }
 
-  // static getDefaultWasmURL(useSmallBinary: boolean) {
-  //     return `${ClangdStdioTransport.getDefaultBaseURL(useSmallBinary)}/clangd.wasm`
+  // static getDefaultWasmURL() {
+  //   return this.wasmUrl + "1";
   // }
 
   constructor(options) {
     super();
-
     this.options = options;
 
     if (!this.options) {

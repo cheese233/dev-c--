@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import legacy from "@vitejs/plugin-legacy";
 export default defineConfig({
   plugins: [
     {
@@ -11,6 +12,9 @@ export default defineConfig({
         });
       },
     },
+    legacy({
+      targets: ["defaults", "not IE 11"],
+    }),
   ],
   build: {
     minify: false,

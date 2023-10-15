@@ -53,7 +53,6 @@ class ClangdModule {
     const stdin = function () {
       return null;
     };
-
     const stdout = function (inByte) {
       // We handle things byte by byte instead of character by character
       // to make sure we're unicode friendly
@@ -110,7 +109,6 @@ class ClangdModule {
     };
 
     module.FS.init(stdin, stdout, stderr);
-
     for (const filename in module.options.initialFileState) {
       module.FS.writeFile(filename, module.options.initialFileState[filename]);
     }
@@ -151,15 +149,14 @@ class ClangdModule {
     );
 
     this.mainScriptUrlOrBlob = this.mainJSObjectURL;
-    let ClangdModule;
+    let Func;
     if (createClangdModule.default) {
-      ClangdModule = createClangdModule.default;
+      Func = createClangdModule.default;
     } else {
-      ClangdModule = createClangdModule;
+      Func = createClangdModule;
     }
-    ClangdModule(this);
+    Func(this);
   }
-
   /** @default [] */
   messageBuf = [];
 }

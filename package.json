@@ -1,23 +1,25 @@
 {
-  "name": "dev-c--",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^4.4.5"
-  },
-  "dependencies": {
-    "@clangd-wasm/core": "^15.0.7",
-    "@open-rpc/client-js": "^1.8.1",
-    "@vitejs/plugin-legacy": "^4.1.1",
-    "ace-code": "^1.30.0",
-    "ace-linters": "^0.13.2",
-    "events": "^3.3.0",
-    "vscode-languageserver-protocol": "^3.17.5"
-  }
+    "name": "dev-c--",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-legacy": "^4.1.1",
+        "vite": "^4.4.5"
+    },
+    "dependencies": {
+        "@clangd-wasm/core": "^15.0.7",
+        "@codemirror/lang-cpp": "^6.0.2",
+        "@open-rpc/client-js": "^1.8.1",
+        "codemirror": "^6.0.1",
+        "codemirror-languageserver": "^1.11.0",
+        "events": "^3.3.0",
+        "js-untar": "^2.0.0",
+        "path-browserify": "^1.0.1"
+    }
 }

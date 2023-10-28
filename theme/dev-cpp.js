@@ -39,12 +39,12 @@ const invalid = "#d30102",
 export const devCppTheme = EditorView.theme(
     {
         "&": {
-            color: base00,
-            backgroundColor: background,
+            color: "#000000",
+            backgroundColor: "#ffffff",
         },
 
         ".cm-content": {
-            caretColor: cursor,
+            caretColor: "#000000",
         },
 
         ".cm-cursor, .cm-dropCursor": { borderLeftColor: cursor },

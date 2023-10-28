@@ -112,15 +112,17 @@ class ClangdModule {
 
         module.FS.init(stdin, stdout, stderr);
         for (const filename in module.options.initialFileState) {
-            if (module.options.initialFileState[filename] == "__dir__") {
-                try {
+            try {
+                if (module.options.initialFileState[filename].isDir == true) {
                     module.FS.mkdir(filename);
-                } catch {}
-            } else {
-                module.FS.writeFile(
-                    filename,
-                    module.options.initialFileState[filename]
-                );
+                } else {
+                    module.FS.writeFile(
+                        filename,
+                        module.options.initialFileState[filename].content
+                    );
+                }
+            } catch (err) {
+                console.error(err, "at", filename);
             }
         }
 
@@ -130,11 +132,16 @@ class ClangdModule {
         //     "/compile_commands.json",
         //     JSON.stringify(module.options.compileCommands)
         // );
+        globalThis.FS = module.FS;
         module.FS.writeFile(
             "/compile_flags.txt",
             [
+                "-isysroot/",
                 "-cxx-isystem/include/c++/v1",
-                "--target=wasm32-unknown-wasi",
+                "-isystem-after/include",
+                "-isystem-after/lib/clang/8.0.1/include",
+                "-resource-dir=/lib/clang/8.0.1",
+                "--target=wasm32-wasi",
                 ...module.options.compileCommands,
             ].join("\n")
         );
@@ -237,17 +244,6 @@ class ClangdStdioTransport extends Transport {
             if (this.options.debug) {
                 console.log("LS to editor <-", datas);
             }
-            // try {
-            //     for (let i = 0; i < datas.params.diagnostics.length; i++) {
-            //         const msg = datas.params.diagnostics[i];
-            //         if (msg.code == "pp_file_not_found") {
-            //             if (this.options.debug) {
-            //                 console.log("Return file_not_found by:\n", msg);
-            //             }
-            //             datas.params.diagnostics.splice(0, 1);
-            //         }
-            //     }
-            // } catch {}
             this.transportRequestManager.resolveResponse(JSON.stringify(datas));
         });
     }

@@ -14,30 +14,28 @@ clangCoreUrl = clangCoreUrl.join("/");
 (async function () {
     const sysRoot = await untar(await (await fetch(sysroot)).arrayBuffer());
     let sysrootFiles = {};
-    sysrootFiles["/include"] = "__dir__";
     for (const file of sysRoot) {
         try {
-            const content = file.readAsString();
             const paths = path.parse(file.name);
-            if (
-                paths.dir.startsWith("include") ||
-                paths.dir.startsWith("lib/clang/8.0.1/include")
-            ) {
-                paths.dir = paths.dir.replace(/^include(\/)?/g, "");
-                paths.dir = paths.dir.replace(
-                    /^lib\/clang\/8\.0\.1\/include(\/)?/g,
-                    ""
-                );
-                console.log(paths.dir, paths.base);
-                if (content != "") {
-                    sysrootFiles[path.join("/include", paths.dir, paths.base)] =
-                        content;
-                } else {
-                    sysrootFiles[path.join("/include", paths.dir, paths.base)] =
-                        "__dir__";
+            // console.log(paths.dir, paths.base);
+            if (file.type != 5) {
+                sysrootFiles[path.join(paths.dir, paths.base)] = {
+                    content: new Uint8Array(file.buffer),
+                };
+            } else {
+                let last = "";
+                console.log(paths);
+                for (let cDir of [
+                    ...(paths.dir != "" ? paths.dir.split("/") : []),
+                    paths.base,
+                ]) {
+                    last = path.join(last, cDir);
+                    sysrootFiles[last] = { isDir: true };
                 }
             }
-        } catch {}
+        } catch (err) {
+            console.log(err);
+        }
     }
     console.log(sysrootFiles);
     const editor = new EditorView({

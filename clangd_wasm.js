@@ -1,21 +1,11 @@
 import { getNotifications } from "@open-rpc/client-js/build/Request";
 import { Transport } from "@open-rpc/client-js/build/transports/Transport";
 import * as createClangdModule from "@clangd-wasm/core/dist/clangd";
-let clangdUrl, clangdWorkerUrl, clangWasm;
-if (!__isUseCDN__) {
-    clangdUrl = new URL("@clangd-wasm/core/dist/clangd.js", import.meta.url)
-        .href;
-    clangdWorkerUrl = new URL(
-        "@clangd-wasm/core/dist/clangd.worker.js",
-        import.meta.url
-    ).href;
-    clangWasm = new URL("@clangd-wasm/core/dist/clangd.wasm", import.meta.url)
-        .href;
-}
-const moduleCDNUrl =
-    "https://unpkg.com/@clangd-wasm/core@" +
-    __packageJson__.dependencies["@clangd-wasm/core"].substring(1) +
-    "/dist/";
+const moduleCDNUrl = __isUseCDN__
+    ? "https://unpkg.com/@clangd-wasm/core@" +
+      __packageJson__.dependencies["@clangd-wasm/core"].substring(1) +
+      "/dist/"
+    : "./";
 // Adapted from https://github.com/ffmpegwasm/ffmpeg.wasm/blob/master/src/browser/getCreateFFmpegCore.js
 /** @param {string} url
  * @param {string} mimeType
@@ -179,16 +169,16 @@ class ClangdModule {
     /** @returns {Promise<void>} */
     async start() {
         this.mainJSObjectURL = await toBlobURL(
-            __isUseCDN__ ? moduleCDNUrl + "clangd.js" : clangdUrl,
+            moduleCDNUrl + "clangd.js",
             "application/javascript"
         );
         this.workerJSObjectURL = await toBlobURL(
-            __isUseCDN__ ? moduleCDNUrl + "clangd.worker.js" : clangdWorkerUrl,
+            moduleCDNUrl + "clangd.worker.js",
             "application/javascript"
         );
 
         this.wasmObjectURL = await toBlobURL(
-            __isUseCDN__ ? moduleCDNUrl + "clangd.wasm" : clangWasm,
+            moduleCDNUrl + "clangd.wasm",
             "application/wasm"
         );
 

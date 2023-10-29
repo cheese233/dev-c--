@@ -10,7 +10,8 @@
     },
     "devDependencies": {
         "@vitejs/plugin-legacy": "^4.1.1",
-        "vite": "^4.4.5"
+        "vite": "^4.4.5",
+        "vite-plugin-static-copy": "^0.17.0"
     },
     "dependencies": {
         "@clangd-wasm/core": "^15.0.7",

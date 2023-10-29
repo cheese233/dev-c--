@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import legacy from "@vitejs/plugin-legacy";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 import * as packageJson from "./package.json";
+const __isUseCDN__ = true;
 export default defineConfig({
     plugins: [
         {
@@ -19,12 +21,22 @@ export default defineConfig({
         legacy({
             targets: ["defaults", "not IE 11"],
         }),
+        viteStaticCopy({
+            targets: __isUseCDN__
+                ? []
+                : [
+                      {
+                          src: "node_modules/@clangd-wasm/core/dist/*",
+                          dest: "./",
+                      },
+                  ],
+        }),
     ],
     build: {
         minify: false,
     },
     define: {
-        __isUseCDN__: true,
+        __isUseCDN__: __isUseCDN__,
         __packageJson__: packageJson,
     },
 });

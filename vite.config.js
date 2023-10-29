@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import legacy from "@vitejs/plugin-legacy";
+import * as packageJson from "./package.json";
 export default defineConfig({
     plugins: [
         {
@@ -21,5 +22,9 @@ export default defineConfig({
     ],
     build: {
         minify: false,
+    },
+    define: {
+        __isUseCDN__: true,
+        __packageJson__: packageJson,
     },
 });

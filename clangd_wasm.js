@@ -1,10 +1,21 @@
 import { getNotifications } from "@open-rpc/client-js/build/Request";
 import { Transport } from "@open-rpc/client-js/build/transports/Transport";
-
 import * as createClangdModule from "@clangd-wasm/core/dist/clangd";
-import clangdUrl from "@clangd-wasm/core/dist/clangd?url";
-import clangdWorkerUrl from "@clangd-wasm/core/dist/clangd.worker?url";
-import clangWasm from "@clangd-wasm/core/dist/clangd.wasm?url";
+let clangdUrl, clangdWorkerUrl, clangWasm;
+if (!__isUseCDN__) {
+    clangdUrl = new URL("@clangd-wasm/core/dist/clangd.js", import.meta.url)
+        .href;
+    clangdWorkerUrl = new URL(
+        "@clangd-wasm/core/dist/clangd.worker.js",
+        import.meta.url
+    ).href;
+    clangWasm = new URL("@clangd-wasm/core/dist/clangd.wasm", import.meta.url)
+        .href;
+}
+const moduleCDNUrl =
+    "https://unpkg.com/@clangd-wasm/core@" +
+    __packageJson__.dependencies["@clangd-wasm/core"].substring(1) +
+    "/dist/";
 // Adapted from https://github.com/ffmpegwasm/ffmpeg.wasm/blob/master/src/browser/getCreateFFmpegCore.js
 /** @param {string} url
  * @param {string} mimeType
@@ -159,7 +170,7 @@ class ClangdModule {
             return this.mainJSObjectURL;
         }
         if (path.endsWith(".wasm")) {
-            return clangWasm;
+            return this.wasmObjectURL;
         }
 
         return this.options.baseURL + "/" + path;
@@ -168,12 +179,17 @@ class ClangdModule {
     /** @returns {Promise<void>} */
     async start() {
         this.mainJSObjectURL = await toBlobURL(
-            clangdUrl,
+            __isUseCDN__ ? moduleCDNUrl + "clangd.js" : clangdUrl,
             "application/javascript"
         );
         this.workerJSObjectURL = await toBlobURL(
-            clangdWorkerUrl,
+            __isUseCDN__ ? moduleCDNUrl + "clangd.worker.js" : clangdWorkerUrl,
             "application/javascript"
+        );
+
+        this.wasmObjectURL = await toBlobURL(
+            __isUseCDN__ ? moduleCDNUrl + "clangd.wasm" : clangWasm,
+            "application/wasm"
         );
 
         this.mainScriptUrlOrBlob = this.mainJSObjectURL;
@@ -199,10 +215,6 @@ class ClangdStdioTransport extends Transport {
     // {
     //     const packageID = useSmallBinary ? "@clangd-wasm/core-small" : "@clangd-wasm/core"
     //     return `https://unpkg.com/@clangd-wasm/core@${packageInfo.devDependencies[packageID].substring(1)}/dist`
-    // }
-
-    // static getDefaultWasmURL() {
-    //   return this.wasmUrl + "1";
     // }
 
     constructor(options) {

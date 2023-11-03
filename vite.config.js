@@ -34,6 +34,7 @@ export default defineConfig({
     ],
     build: {
         minify: false,
+        manifest: true,
     },
     define: {
         __isUseCDN__: __isUseCDN__,

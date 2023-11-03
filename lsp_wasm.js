@@ -15,7 +15,7 @@ export default async (debug = true) => {
                 };
             } else {
                 let last = "";
-                console.log(paths);
+                if (debug) console.log(paths);
                 for (let cDir of [
                     ...(paths.dir != "" ? paths.dir.split("/") : []),
                     paths.base,

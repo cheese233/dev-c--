@@ -32,7 +32,7 @@ const invalid = "#d30102",
     highlightBackground = darkBackground,
     background = "#ffffff",
     tooltipBackground = base05,
-    selection = darkBackground,
+    selection = "#000080 !important",
     cursor = base01;
 
 /// The editor theme styles for Basic Light.
@@ -42,15 +42,16 @@ export const devCppTheme = EditorView.theme(
             color: "#000000",
             backgroundColor: "#ffffff",
         },
-
+        "& .cm-scroller": {
+            "font-family": "Consolas",
+        },
         ".cm-content": {
             caretColor: "#000000",
         },
 
         ".cm-cursor, .cm-dropCursor": { borderLeftColor: cursor },
         "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
-            { backgroundColor: selection },
-
+            { backgroundColor: selection, color: "#ffffff" },
         ".cm-panels": { backgroundColor: darkBackground, color: base03 },
         ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
         ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
@@ -63,18 +64,21 @@ export const devCppTheme = EditorView.theme(
             backgroundColor: base05,
         },
 
-        ".cm-activeLine": { backgroundColor: highlightBackground },
+        ".cm-activeLine": { backgroundColor: "#ccffff22" },
         ".cm-selectionMatch": { backgroundColor: base05 },
 
         "&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket":
             {
-                outline: `1px solid ${base03}`,
+                // outline: `1px solid ${base03}`,
             },
 
         "&.cm-focused .cm-matchingBracket": {
-            backgroundColor: base06,
+            backgroundColor: "#ff0000",
         },
-
+        "&.cm-focused .cm-matchingBracket > *,&.cm-focused .cm-matchingBracket":
+            {
+                color: "white",
+            },
         ".cm-gutters": {
             backgroundColor: base06,
             color: base00,
@@ -84,7 +88,9 @@ export const devCppTheme = EditorView.theme(
         ".cm-activeLineGutter": {
             backgroundColor: highlightBackground,
         },
-
+        "& .cm-lineNumbers .cm-gutterElement": {
+            "padding-right": "10px",
+        },
         ".cm-foldPlaceholder": {
             backgroundColor: "transparent",
             border: "none",
@@ -109,48 +115,55 @@ export const devCppTheme = EditorView.theme(
                 color: base03,
             },
         },
+        "& .cm-line": {
+            color: "#ff0000",
+            "line-height": "1.2",
+        },
     },
     { dark: false }
 );
 
 /// The highlighting style for code in the Basic Light theme.
 export const devCppHighlightStyle = HighlightStyle.define([
-    { tag: t.keyword, color: base0A },
+    { tag: t.keyword, color: "black", "font-weight": "bold" },
     {
         tag: [t.name, t.deleted, t.character, t.propertyName, t.macroName],
-        color: base0C,
+        color: "black",
     },
-    { tag: [t.variableName], color: base0C },
-    { tag: [t.function(t.variableName)], color: base0A },
-    { tag: [t.labelName], color: base09 },
+    { tag: [t.variableName], color: "black" },
+    { tag: [t.function(t.variableName)], color: "black" },
+    { tag: [t.labelName], color: "black" },
     {
         tag: [t.color, t.constant(t.name), t.standard(t.name)],
-        color: base0A,
+        color: "black",
     },
-    { tag: [t.definition(t.name), t.separator], color: base0E },
-    { tag: [t.brace], color: base07 },
+    {
+        tag: [t.definition(t.name), t.separator],
+        color: "#ff0000",
+        "font-weight": "bold",
+    },
+    { tag: [t.bracket], color: "#ff0000", "font-weight": "bold" },
     {
         tag: [t.annotation],
         color: invalid,
     },
     {
-        tag: [
-            t.number,
-            t.changed,
-            t.annotation,
-            t.modifier,
-            t.self,
-            t.namespace,
-        ],
-        color: base08,
+        tag: [t.changed, t.annotation, t.modifier, t.self, t.namespace],
+        color: "black",
+    },
+    {
+        tag: [t.number],
+        color: "purple",
     },
     {
         tag: [t.typeName, t.className],
-        color: base0D,
+        color: "black",
+        "font-weight": "bold",
     },
     {
         tag: [t.operator, t.operatorKeyword],
-        color: base0E,
+        color: "#ff0000",
+        "font-weight": "bold",
     },
     {
         tag: [t.tagName],
@@ -158,11 +171,13 @@ export const devCppHighlightStyle = HighlightStyle.define([
     },
     {
         tag: [t.squareBracket],
-        color: base0b,
+        color: "#ff0000",
+        "font-weight": "bold",
     },
     {
         tag: [t.angleBracket],
-        color: base0C,
+        color: "#ff0000",
+        "font-weight": "bold",
     },
     {
         tag: [t.attributeName],
@@ -170,48 +185,58 @@ export const devCppHighlightStyle = HighlightStyle.define([
     },
     {
         tag: [t.regexp],
-        color: base0A,
+        color: "black",
+        "font-weight": "bold",
     },
     {
         tag: [t.quote],
         color: base01,
     },
-    { tag: [t.string], color: base0C },
+    { tag: [t.string], color: "blue" },
     {
         tag: t.link,
-        color: base07,
+        color: "black",
+        "font-weight": "bold",
         textDecoration: "underline",
         textUnderlinePosition: "under",
     },
     {
-        tag: [t.url, t.escape, t.special(t.string)],
-        color: base0C,
+        tag: [t.url, t.escape],
+        color: "blue",
     },
-    { tag: [t.meta], color: base08 },
-    { tag: [t.comment], color: base02, fontStyle: "italic" },
-    { tag: t.strong, fontWeight: "bold", color: base0A },
+    {
+        tag: [t.special(t.string)],
+        color: "green",
+    },
+    { tag: [t.meta], color: "black" },
+    { tag: [t.comment], color: "#0078d7", fontStyle: "italic" },
+    { tag: t.strong, "font-weight": "bold", color: base0A },
     { tag: t.emphasis, fontStyle: "italic", color: base0A },
     { tag: t.strikethrough, textDecoration: "line-through" },
-    { tag: t.heading, fontWeight: "bold", color: base0A },
-    { tag: t.special(t.heading1), fontWeight: "bold", color: base0A },
-    { tag: t.heading1, fontWeight: "bold", color: base0A },
+    { tag: t.heading, "font-weight": "bold", color: base0A },
+    { tag: t.special(t.heading1), "font-weight": "bold", color: base0A },
+    { tag: t.heading1, "font-weight": "bold", color: base0A },
     {
         tag: [t.heading2, t.heading3, t.heading4],
-        fontWeight: "bold",
+        "font-weight": "bold",
         color: base0A,
     },
     {
         tag: [t.heading5, t.heading6],
         color: base0A,
     },
-    { tag: [t.atom, t.bool, t.special(t.variableName)], color: base0C },
+    {
+        tag: [t.atom, t.bool, t.special(t.variableName)],
+        color: "black",
+        "font-weight": "bold",
+    },
     {
         tag: [t.processingInstruction, t.inserted],
-        color: base07,
+        color: "green",
     },
     {
         tag: [t.contentSeparator],
-        color: base0D,
+        color: "#000",
     },
     { tag: t.invalid, color: base02, borderBottom: `1px dotted ${invalid}` },
 ]);

@@ -47,7 +47,8 @@ class ClangdModule {
         this.onMessageHook = onMessageHook;
     }
 
-    /** @param {ClangdModule} module
+    /**
+     * @param {ClangdModule} module
      * @returns {void}
      */
     preRun(module) {
@@ -264,7 +265,7 @@ class ClangdStdioTransport extends Transport {
      * @param {JSONRPCRequestData} data
      * @returns {Promise<any>}
      */
-    async sendData(data) {
+    sendData(data) {
         if (this.options.debug) {
             console.log("Editor to LS ->", data);
         }

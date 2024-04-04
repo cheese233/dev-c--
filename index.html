@@ -7,13 +7,15 @@
 </head>
 
 <body>
-    <div class="head">
-
+    <div class="head tab">
+        <img src="./assets/about.png" />
     </div>
     <div class="main">
         <div id="editor" class="editor"></div>
     </div>
-    <div class="foot"></div>
+    <div class="foot tab">
+        <div id="msg"></div>
+    </div>
     <script type="module" src="main.js"></script>
     <style>
         .editor {
@@ -32,7 +34,6 @@
         }
 
         .head {
-            flex: 0 1.5rem;
             background-color: #f0f0f0;
         }
 
@@ -45,8 +46,24 @@
         }
 
         .foot {
-            flex: 0 1.5rem;
+            display: flex;
+            flex-direction: row;
             background-color: #f0f0f0;
+        }
+
+        .tab {
+            flex: 0 16px;
+            height: 16px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        #msg {
+            max-width: 50%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            word-break: break-all;
+            white-space: nowrap;
         }
     </style>
 </body>

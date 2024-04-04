@@ -1,8 +1,7 @@
 import { defineConfig } from "vite";
 import legacy from "@vitejs/plugin-legacy";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import * as packageJson from "./package.json";
-const __isUseCDN__ = true;
+const __isUseCDN__ = Boolean(process.env.USE_CDN);
 export default defineConfig({
     plugins: [
         {
@@ -38,6 +37,5 @@ export default defineConfig({
     },
     define: {
         __isUseCDN__: __isUseCDN__,
-        __packageJson__: packageJson,
     },
 });

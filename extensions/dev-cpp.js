@@ -64,7 +64,7 @@ export const devCppTheme = EditorView.theme(
             backgroundColor: base05,
         },
 
-        ".cm-activeLine": { backgroundColor: "#ccffff22" },
+        ".cm-activeLine": { backgroundColor: "#ccffff" },
         ".cm-selectionMatch": { backgroundColor: base05 },
 
         "&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket":

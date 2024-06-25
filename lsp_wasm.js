@@ -1,9 +1,10 @@
 import { ClangdStdioTransport } from "./clangd_wasm";
 import untar from "js-untar";
-import sysroot from "./wasm-clang/sysroot.tar?url";
 import path from "path-browserify";
 export default async (debug = true) => {
-    const sysRoot = await untar(await (await fetch(sysroot)).arrayBuffer());
+    const sysRoot = await untar(
+        await (await fetch("./sysroot.tar")).arrayBuffer()
+    );
     let sysrootFiles = {};
     for (const file of sysRoot) {
         try {

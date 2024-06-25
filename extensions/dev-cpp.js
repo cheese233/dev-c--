@@ -10,27 +10,19 @@ const base00 = "#2e3440", // black
     base03 = "#4c566a"; // grey
 
 // Snow Storm
-const base04 = "#d8dee9", // grey
-    base05 = "#e5e9f0", // off white
-    base06 = "#eceff4"; // white
+const base05 = "#e5e9f0", // off white
+    base06 = "#f0f0f0"; // white
 
 // Frost
-const base07 = "#8fbcbb", // moss green
-    base08 = "#88c0d0", // ice blue
-    base09 = "#81a1c1", // water blue
-    base0A = "#5e81ac"; // deep blue
+const base0A = "#5e81ac"; // deep blue
 
 // Aurora
-const base0b = "#bf616a", // red
-    base0C = "#d08770", // orange
-    base0D = "#ebcb8b", // yellow
-    base0E = "#a3be8c", // green
+const base0D = "#ebcb8b", // yellow
     base0F = "#b48ead"; // purple
 
 const invalid = "#d30102",
     darkBackground = base06,
     highlightBackground = darkBackground,
-    background = "#ffffff",
     tooltipBackground = base05,
     selection = "#000080 !important",
     cursor = base01;

@@ -3,29 +3,50 @@
 
 <head>
     <meta charset="UTF-8" />
+    <title>Dev-C--</title>
+    <meta name="description" content="Dev-C--">
+    <link rel="icon" href="assets/DEVCMM.ico">
+    <meta name="theme-color" content="#000080">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
 
-<body>
-    <div class="head tab">
-        <img src="./assets/about.png" />
+<body class="window">
+    <div class="title-bar" style="justify-content: flex-start;user-select: none;">
+        <img src="assets/DEVCMM.ico" style="height: 1rem;margin-right: 5px;" />
+        <div class="title-bar-text" id="title">Dev-C--</div>
     </div>
-    <div class="main">
-        <div id="editor" class="editor"></div>
-    </div>
-    <div class="foot tab">
-        <div id="msg"></div>
+    <div class="window-body">
+        <div class="head tab">
+
+        </div>
+        <div class="main">
+            <div id="editor" class="editor box"></div>
+        </div>
+        <div class="status-bar foot tab">
+            <p class="status-bar-field" id="msg">
+            </p>
+            <p class="status-bar-field"></p>
+            <p class="status-bar-field"></p>
+        </div>
     </div>
     <script type="module" src="main.js"></script>
     <style>
+        .box {
+            box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
+        }
+
         .editor {
             height: 100%;
         }
 
+        html,
+        body,
+        .window {
+            font-family: "Unifont";
+        }
+
         body {
             margin: 0;
-            display: flex;
-            flex-direction: column;
             top: 0;
             bottom: 0;
             left: 0;
@@ -33,12 +54,28 @@
             position: absolute;
         }
 
+
+
+        .title-bar {
+            height: 16px;
+        }
+
+        .window-body {
+            height: calc(100% - 35px);
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 8px;
+        }
+
         .head {
             background-color: #f0f0f0;
+            border-bottom: 1px #a0a0a0 solid;
         }
 
         .main {
             flex: 1;
+            overflow: scroll;
         }
 
         .cm-editor {
@@ -48,13 +85,11 @@
         .foot {
             display: flex;
             flex-direction: row;
-            background-color: #f0f0f0;
         }
 
         .tab {
             flex: 0 16px;
             height: 16px;
-            font-size: 12px;
             white-space: nowrap;
         }
 

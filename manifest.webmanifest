@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+    "name": "Dev-C--",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "assets/DEVCMM.ico",
+            "sizes": "48x48",
+            "type": "image/x-icon"
+        }
+    ],
+    "display": "standalone",
+    "background_color": "#008888",
+    "theme_color": "#000080"
+}

@@ -1,3 +1,5 @@
+**Make a minimal build first!!!**
+
 ```mermaid
 flowchart TB
   Start

@@ -57,7 +57,7 @@ export const devCppTheme = EditorView.theme(
         },
 
         ".cm-activeLine": { backgroundColor: "#ccffff" },
-        ".cm-selectionMatch": { backgroundColor: base05 },
+        ".cm-selectionMatch": { backgroundColor: "transparent" },
 
         "&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket":
             {
@@ -81,7 +81,7 @@ export const devCppTheme = EditorView.theme(
             backgroundColor: highlightBackground,
         },
         "& .cm-lineNumbers .cm-gutterElement": {
-            "padding-right": "10px",
+            padding: "0 0 0 10px",
         },
         ".cm-foldPlaceholder": {
             backgroundColor: "transparent",

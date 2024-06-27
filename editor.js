@@ -29,7 +29,7 @@ import {
     completionKeymap,
 } from "@codemirror/autocomplete";
 import { lintKeymap } from "@codemirror/lint";
-import lsp_wasm from "./lsp_wasm";
+import lsp_wasm from "./extensions/lsp_wasm";
 import { getTime, logMsg } from "./core";
 export default async function (parent) {
     const lsp = await getTime(lsp_wasm, (msg) =>
@@ -88,7 +88,6 @@ int main(){
                 }),
                 dropCursor(),
                 indentOnInput(),
-                syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
                 bracketMatching(),
                 closeBrackets(),
                 autocompletion(),
@@ -104,6 +103,11 @@ int main(){
                 documentUri: `file:///main.cpp`,
                 languageId: "cpp",
                 autoClose: false,
+                capabilities: {
+                    window: {
+                        workDoneProgress: true,
+                    },
+                },
             }),
             keymap.of([
                 ...closeBracketsKeymap,

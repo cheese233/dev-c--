@@ -6,6 +6,7 @@
     <title>Dev-C--</title>
     <meta name="description" content="Dev-C--">
     <link rel="icon" href="assets/DEVCMM.ico">
+    <link rel="manifest" href="./manifest.webmanifest" />
     <meta name="theme-color" content="#000080">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
@@ -16,33 +17,57 @@
         <div class="title-bar-text" id="title">Dev-C--</div>
     </div>
     <div class="window-body">
-        <div class="head tab">
-
-        </div>
-        <div class="main">
-            <div id="editor" class="editor box"></div>
+        <div class="head tab"></div>
+        <menu class="tab" role="tablist">
+            <li role="tab" aria-selected="true">
+                <a onclick=";">[*]未命名</a>
+            </li>
+        </menu>
+        <div class="main" role="tabpanel" style="padding-top: 2px;">
+            <div id="editor" class="editor"></div>
         </div>
         <div class="status-bar foot tab">
-            <p class="status-bar-field" id="msg">
+            <p class="status-bar-field">
             </p>
-            <p class="status-bar-field"></p>
-            <p class="status-bar-field"></p>
+            <p class="status-bar-field" id="msg"></p>
         </div>
     </div>
     <script type="module" src="main.js"></script>
     <style>
+        @media screen and (display-mode: standalone) {
+            .title-bar {
+                display: none;
+                ;
+            }
+
+            .window-body {
+                height: calc(100% - 13px) !important;
+            }
+        }
+
         .box {
             box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
         }
 
         .editor {
             height: 100%;
+            font-size: 28px;
         }
 
         html,
         body,
-        .window {
+        .title-bar,
+        .window,
+        button,
+        input,
+        label,
+        option,
+        select,
+        table,
+        textarea,
+        ul.tree-view {
             font-family: "Unifont";
+            font-size: 12px;
         }
 
         body {
@@ -62,33 +87,24 @@
 
         .window-body {
             height: calc(100% - 35px);
-            display: flex;
-            flex-direction: column;
             margin: 0;
             padding: 8px;
         }
 
         .head {
-            background-color: #f0f0f0;
             border-bottom: 1px #a0a0a0 solid;
         }
 
         .main {
-            flex: 1;
-            overflow: scroll;
+            height: calc(100% - 16px * 3);
         }
 
         .cm-editor {
             height: 100%;
         }
 
-        .foot {
-            display: flex;
-            flex-direction: row;
-        }
 
         .tab {
-            flex: 0 16px;
             height: 16px;
             white-space: nowrap;
         }

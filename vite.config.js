@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import legacy from "@vitejs/plugin-legacy";
-import { VitePWA } from "vite-plugin-pwa";
 import PackageJSON from "./package.json";
 const DEFINES = {
     version: PackageJSON.version,
@@ -24,11 +23,10 @@ export default defineConfig({
         legacy({
             targets: ["defaults", "not IE 11"],
         }),
-        VitePWA({ registerType: "autoUpdate" }),
     ],
     build: {
         minify: false,
-        manifest: true,
+        manifest: false,
     },
     define: {
         __DEFINES__: DEFINES,

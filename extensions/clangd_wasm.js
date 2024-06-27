@@ -156,6 +156,7 @@ class ClangdModule {
      */
     locateFile(path, _prefix) {
         if (path.endsWith(".js")) {
+            console.log(path, this.mainJSObjectURL);
             return this.mainJSObjectURL;
         }
         if (path.endsWith(".wasm")) {
@@ -188,13 +189,7 @@ class ClangdModule {
         );
 
         this.mainScriptUrlOrBlob = this.mainJSObjectURL;
-        let Func;
-        if (createClangdModule.default) {
-            Func = createClangdModule.default;
-        } else {
-            Func = createClangdModule;
-        }
-        Func(this);
+        createClangdModule(this);
     }
     /** @default [] */
     messageBuf = [];

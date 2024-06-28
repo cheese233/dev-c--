@@ -1,7 +1,5 @@
-import { getNotifications } from "@open-rpc/client-js/build/Request";
-import { Transport } from "@open-rpc/client-js/build/transports/Transport";
-import createClangdModule from "@cheese233/clang-wasm/dist/clangd";
-
+import createClangModule from "@cheese233/clang-wasm/dist/clang";
+import decodeASAR from "./asar";
 // Adapted from https://github.com/ffmpegwasm/ffmpeg.wasm/blob/master/src/browser/getCreateFFmpegCore.js
 /** @param {string} url
  * @param {string} mimeType
@@ -13,11 +11,10 @@ const toBlobURL = async (url, mimeType) => {
     const blobURL = URL.createObjectURL(blob);
     return blobURL;
 };
-
-class ClangdModule {
+class ClangModule {
     FS = undefined;
 
-    mainScriptUrlOrBlob = undefined;
+    mainScriptUrlOrBlob: string;
     /** @default [] */
     arguments = [];
 
@@ -28,21 +25,21 @@ class ClangdModule {
     /** @default [] */
     stderrBuf = [];
 
-    mainJSObjectURL = undefined;
+    mainJSObjectURL: string;
 
-    workerJSObjectURL = undefined;
+    workerJSObjectURL: string;
 
-    options = undefined;
+    options = {};
 
     onMessageHook = undefined;
 
     baseURL = undefined;
 
+    wasmObjectURL: string;
     constructor(options, onMessageHook) {
         this.options = options;
         this.onMessageHook = onMessageHook;
     }
-
     /**
      * @param {ClangdModule} module
      * @returns {void}
@@ -128,19 +125,15 @@ class ClangdModule {
             }
         }
 
-        module.FS.writeFile(
-            "/compile_flags.txt",
-            [
-                "-isysroot/",
-                "-cxx-isystem/include/c++/v1",
-                "-isystem-after/include",
-                "-isystem-after/lib/clang/8.0.1/include",
-                "-resource-dir=/lib/clang/8.0.1",
-                "--target=wasm32-wasi",
-                ...module.options.compileCommands,
-            ].join("\n")
+        module.arguments.push(
+            "-isysroot/",
+            "-cxx-isystem/include/c++/v1",
+            "-isystem-after/include",
+            "-isystem-after/lib/clang/8.0.1/include",
+            "-resource-dir=/lib/clang/8.0.1",
+            "--target=wasm32-wasi",
+            ...module.options.compileCommands
         );
-        module.arguments.push(...module.options.cliArguments);
     }
 
     /** @param {string} path
@@ -149,13 +142,14 @@ class ClangdModule {
      */
     locateFile(path, _prefix) {
         if (path.endsWith(".js")) {
+            console.log(path, this.mainJSObjectURL);
             return this.mainJSObjectURL;
         }
         if (path.endsWith(".wasm")) {
             return this.wasmObjectURL;
         }
 
-        return this.options.baseURL + "/" + path;
+        return (this.options as any).baseURL + "/" + path;
     }
 
     /** @returns {Promise<void>} */
@@ -166,13 +160,6 @@ class ClangdModule {
             ).default,
             "application/javascript"
         );
-        // this.workerJSObjectURL = await toBlobURL(
-        //     (
-        //         await import("@cheese233/clang-wasm/dist/clangd.worker.js?url")
-        //     ).default,
-        //     "application/javascript"
-        // );
-
         this.wasmObjectURL = await toBlobURL(
             (
                 await import("@cheese233/clang-wasm/dist/clangd.wasm?url")
@@ -181,117 +168,38 @@ class ClangdModule {
         );
 
         this.mainScriptUrlOrBlob = this.mainJSObjectURL;
-        createClangdModule(this);
+        createClangModule(this);
     }
     /** @default [] */
     messageBuf = [];
 }
 
-// Transport structure from https://gitlab.com/aedge/codemirror-web-workers-lsp-demo
-/** @extends Transport */
-class ClangdStdioTransport extends Transport {
-    /** @type {ClangdModule} */
-    module = undefined;
-
-    options = undefined;
-    // static getDefaultBaseURL(useSmallBinary: boolean)
-    // {
-    //     const packageID = useSmallBinary ? "@clangd-wasm/core-small" : "@clangd-wasm/core"
-    //     return `https://unpkg.com/@clangd-wasm/core@${packageInfo.devDependencies[packageID].substring(1)}/dist`
-    // }
-    /**@param {ClangdStdioTransportOptions} options */
-    constructor(options) {
-        super();
-        this.options = options;
-
-        if (!this.options) {
-            this.options = {
-                cliArguments: [],
-            };
-        }
-
-        // if (this.options.useSmallBinary === undefined) {
-        //   this.options.useSmallBinary = false;
-        // }
-
-        // if (!this.options.baseURL) {
-        //     this.options.baseURL = ClangdStdioTransport.getDefaultBaseURL(this.options.useSmallBinary)
-        // }
-
-        if (!this.options.debug) {
-            this.options.debug = false;
-        }
-
-        if (!this.options.initialFileState) {
-            this.options.initialFileState = {};
-        }
-
-        if (!this.options.compileCommands) {
-            this.options.compileCommands = [];
-        }
-
-        if (!this.options.cliArguments) {
-            this.options.cliArguments = [];
-        }
-
-        this.module = new ClangdModule(this.options, async (data) => {
-            let datas = JSON.parse(data);
-            if (this.options.debug) {
-                console.log("LS to editor <-", datas);
-            }
-            this.transportRequestManager.resolveResponse(JSON.stringify(datas));
-        });
-    }
-
-    /** @public
-     * @returns {Promise<void>}
-     */
-    connect() {
-        return new Promise(async (resolve) => {
-            await this.module.start();
-            resolve();
-        });
-    }
-
-    /** @public
-     * @param {JSONRPCRequestData} data
-     * @returns {Promise<any>}
-     */
-    sendData(data) {
-        if (this.options.debug) {
-            console.log("Editor to LS ->", data);
-        }
-
-        const prom = this.transportRequestManager.addRequest(data, null);
-        const notifications = getNotifications(data);
-        this.module.messageBuf.push(data.request);
-        this.transportRequestManager.settlePendingRequest(notifications);
-        return prom;
-    }
-
-    /** @public
-     * @returns {void}
-     */
-    close() {}
+export async function compile(files: Files, fileName: string) {
+    await new ClangModule(
+        {
+            initialFileState: Object.assign(
+                await decodeASAR(
+                    new Uint8Array(
+                        await (
+                            await fetch(
+                                (
+                                    await import("./sysroot.asar?url")
+                                ).default
+                            )
+                        ).arrayBuffer()
+                    )
+                ),
+                files
+            ),
+            compileCommands: ["-o main.out", fileName],
+        },
+        (msg) => console.log(msg)
+    ).start();
 }
-
-export { ClangdStdioTransport };
-
-/**
- * @typedef {{
- *   directory: string;
- *   file: string;
- *   arguments: string[];
- *   output?: string;
- * }} CompileCommandEntry
- */
-/** @typedef {CompileCommandEntry[]} CompileCommands */
-/**
- * @typedef {{
- *   baseURL?: string;
- *   debug?: boolean;
- *   initialFileState?: { [filename: string]: string };
- *   compileCommands?: CompileCommands;
- *   cliArguments: string[];
- * }} ClangdStdioTransportOptions
- */
+interface Files {
+    [name: string]: FileOrFolder;
+}
+interface FileOrFolder {
+    content?: Uint8Array;
+    isDir?: boolean;
+}

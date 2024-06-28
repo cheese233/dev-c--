@@ -1,7 +1,7 @@
 import { Buffer } from "buffer/";
 import path from "path-browserify";
 (globalThis.Buffer as any) = Buffer;
-import { createFromBuffer, createEmpty } from "chromium-pickle-js";
+import { createFromBuffer } from "chromium-pickle-js";
 export default async function decodeASAR(Uint8ASAR: Uint8Array) {
     const asar = Buffer.from(Uint8ASAR);
     const headerLength = createFromBuffer(asar.subarray(0, 8))
